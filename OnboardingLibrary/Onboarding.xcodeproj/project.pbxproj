@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E755CDAE1CAF236900980DE8 /* Onboarding.h in Headers */ = {isa = PBXBuildFile; fileRef = E755CDAD1CAF236900980DE8 /* Onboarding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E755CDB51CAF236900980DE8 /* Onboarding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E755CDAA1CAF236900980DE8 /* Onboarding.framework */; };
 		E755CDBA1CAF236900980DE8 /* OnboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E755CDB91CAF236900980DE8 /* OnboardingTests.swift */; };
+		E7BBA8621CAF46B000CE5FB0 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA85F1CAF46B000CE5FB0 /* OnboardingPage.swift */; };
+		E7BBA8631CAF46B000CE5FB0 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA8601CAF46B000CE5FB0 /* Onboarding.swift */; };
+		E7BBA8641CAF46B000CE5FB0 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA8611CAF46B000CE5FB0 /* OnboardingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,11 +26,13 @@
 
 /* Begin PBXFileReference section */
 		E755CDAA1CAF236900980DE8 /* Onboarding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Onboarding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E755CDAD1CAF236900980DE8 /* Onboarding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Onboarding.h; sourceTree = "<group>"; };
 		E755CDAF1CAF236900980DE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E755CDB41CAF236900980DE8 /* OnboardingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnboardingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E755CDB91CAF236900980DE8 /* OnboardingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTests.swift; sourceTree = "<group>"; };
 		E755CDBB1CAF236900980DE8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E7BBA85F1CAF46B000CE5FB0 /* OnboardingPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingPage.swift; path = Sources/OnboardingPage.swift; sourceTree = SOURCE_ROOT; };
+		E7BBA8601CAF46B000CE5FB0 /* Onboarding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Onboarding.swift; path = Sources/Onboarding.swift; sourceTree = SOURCE_ROOT; };
+		E7BBA8611CAF46B000CE5FB0 /* OnboardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingViewController.swift; path = Sources/OnboardingViewController.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +75,9 @@
 		E755CDAC1CAF236900980DE8 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				E755CDAD1CAF236900980DE8 /* Onboarding.h */,
+				E7BBA85F1CAF46B000CE5FB0 /* OnboardingPage.swift */,
+				E7BBA8601CAF46B000CE5FB0 /* Onboarding.swift */,
+				E7BBA8611CAF46B000CE5FB0 /* OnboardingViewController.swift */,
 				E755CDAF1CAF236900980DE8 /* Info.plist */,
 			);
 			path = Onboarding;
@@ -93,7 +99,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E755CDAE1CAF236900980DE8 /* Onboarding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +199,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7BBA8631CAF46B000CE5FB0 /* Onboarding.swift in Sources */,
+				E7BBA8641CAF46B000CE5FB0 /* OnboardingViewController.swift in Sources */,
+				E7BBA8621CAF46B000CE5FB0 /* OnboardingPage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,27 +318,32 @@
 		E755CDBF1CAF236900980DE8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Onboarding/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rockwood.Onboarding;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		E755CDC01CAF236900980DE8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = Onboarding/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rockwood.Onboarding;
@@ -378,6 +391,7 @@
 				E755CDC01CAF236900980DE8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E755CDC11CAF236900980DE8 /* Build configuration list for PBXNativeTarget "OnboardingTests" */ = {
 			isa = XCConfigurationList;
@@ -386,6 +400,7 @@
 				E755CDC31CAF236900980DE8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
