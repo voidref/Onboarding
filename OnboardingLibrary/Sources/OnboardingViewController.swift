@@ -24,7 +24,7 @@ private let skStandardHInset:CGFloat = 20
 private let skStandardVInset:CGFloat = 10
 
 public
-class OnboardingViewController: UIViewController {
+class OnboardingViewController: UIViewController, UIScrollViewDelegate {
 
     public 
     var skipButton = UIButton(type: .System) {
@@ -53,6 +53,37 @@ class OnboardingViewController: UIViewController {
     private let pager = UIPageControl()
 
     private var currentSkipConstraints:[NSLayoutConstraint] = []
+    private var pages:[OnboardingPage] = []
+    
+    private var scroller = UIScrollView()
+    
+    public func setPages(pageset:[OnboardingPage]) {
+        
+        pages.forEach { $0.removeFromSuperview() }
+        
+        pages = pageset
+        pager.numberOfPages = pages.count
+        
+        var anchorView:UIView = scroller
+        var anchorAttribute = NSLayoutAttribute.Left
+        pages.forEach { (page) in
+            scroller.addSubview(page)
+            scroller.addConstraint(
+                NSLayoutConstraint(item: page, attribute: .Height, relatedBy: .Equal, toItem: scroller, attribute: .Height, multiplier: 1, constant: 0))
+            scroller.addConstraint(
+                NSLayoutConstraint(item: page, attribute: .CenterY, relatedBy: .Equal, toItem: scroller, attribute: .CenterY, multiplier: 1, constant: 0))
+            
+            scroller.addConstraint(
+                NSLayoutConstraint(item: page, attribute: .Width, relatedBy: .Equal, toItem: scroller, attribute: .Width, multiplier: 1, constant: 0))
+            scroller.addConstraint(
+                NSLayoutConstraint(item: page, attribute: .Left, relatedBy: .Equal, toItem: anchorView, attribute: anchorAttribute, multiplier: 1, constant: 0))
+            anchorView = page
+            anchorAttribute = .Right
+        }
+        
+        // ScrollViews and autolayout is ... weird and special.
+        scroller.addConstraint(NSLayoutConstraint(item: scroller, attribute: .Right, relatedBy: .Equal, toItem: anchorView, attribute: .Right, multiplier: 1, constant: 0))
+    }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -60,8 +91,7 @@ class OnboardingViewController: UIViewController {
         setupBackground()
         setupOverlay()
         setupSkipButton()
-        
-        setNeedsStatusBarAppearanceUpdate()
+        setupScroller()
     }
 
     override public func didReceiveMemoryWarning() {
@@ -183,8 +213,24 @@ class OnboardingViewController: UIViewController {
     
     private func setupBackground() {
         view.insertSubview(backgroundView, atIndex: 0)
+    }
+    
+    private func setupPageConstraints() {
         
-
+    }
+    
+    private func setupScroller() {
+        scroller.translatesAutoresizingMaskIntoConstraints = false
+        scroller.pagingEnabled = true
+        scroller.delegate = self
+        scroller.showsHorizontalScrollIndicator = false
+        view.addSubview(scroller)
+        
+        view.addConstraints(NSLayoutConstraint.constraintsFor(view: scroller, fillingParentView: view))
+    }
+    
+    public func scrollViewDidScroll(scrollView: UIScrollView) {
+        // update page indicator
     }
 }
 

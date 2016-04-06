@@ -13,7 +13,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         let ob = OnboardingViewController()
         addChildViewController(ob)
@@ -24,11 +23,11 @@ class ViewController: UIViewController {
         let views = ["ob":ob.view]
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[ob]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[ob]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        let firstPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: nil, titleText: "First!", contentText: "Some content that's all cool and stuff")
+        let secondPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: nil, titleText: "Second", contentText: "Some content that's all cool and stuff")
+        
+        ob.setPages([firstPage, secondPage])
     }
 
     override func prefersStatusBarHidden() -> Bool {

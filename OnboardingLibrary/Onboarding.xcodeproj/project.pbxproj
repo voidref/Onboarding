@@ -12,6 +12,7 @@
 		E7BBA8621CAF46B000CE5FB0 /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA85F1CAF46B000CE5FB0 /* OnboardingPage.swift */; };
 		E7BBA8631CAF46B000CE5FB0 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA8601CAF46B000CE5FB0 /* Onboarding.swift */; };
 		E7BBA8641CAF46B000CE5FB0 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA8611CAF46B000CE5FB0 /* OnboardingViewController.swift */; };
+		E7BBA8681CB4D57200CE5FB0 /* NSLayoutConstraint+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BBA8671CB4D57200CE5FB0 /* NSLayoutConstraint+Convenience.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		E7BBA85F1CAF46B000CE5FB0 /* OnboardingPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingPage.swift; path = Sources/OnboardingPage.swift; sourceTree = SOURCE_ROOT; };
 		E7BBA8601CAF46B000CE5FB0 /* Onboarding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Onboarding.swift; path = Sources/Onboarding.swift; sourceTree = SOURCE_ROOT; };
 		E7BBA8611CAF46B000CE5FB0 /* OnboardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OnboardingViewController.swift; path = Sources/OnboardingViewController.swift; sourceTree = SOURCE_ROOT; };
+		E7BBA8671CB4D57200CE5FB0 /* NSLayoutConstraint+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSLayoutConstraint+Convenience.swift"; path = "Sources/NSLayoutConstraint+Convenience.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				E7BBA8601CAF46B000CE5FB0 /* Onboarding.swift */,
 				E7BBA8611CAF46B000CE5FB0 /* OnboardingViewController.swift */,
 				E755CDAF1CAF236900980DE8 /* Info.plist */,
+				E7BBA8671CB4D57200CE5FB0 /* NSLayoutConstraint+Convenience.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -202,6 +205,7 @@
 				E7BBA8631CAF46B000CE5FB0 /* Onboarding.swift in Sources */,
 				E7BBA8641CAF46B000CE5FB0 /* OnboardingViewController.swift in Sources */,
 				E7BBA8621CAF46B000CE5FB0 /* OnboardingPage.swift in Sources */,
+				E7BBA8681CB4D57200CE5FB0 /* NSLayoutConstraint+Convenience.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
