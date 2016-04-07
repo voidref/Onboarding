@@ -49,7 +49,6 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
     public var doneAction:DoneAction?
     
     private let overlayView = UIView()
-    private let backgroundView = UIView()
     private let pager = UIPageControl()
 
     private var currentSkipConstraints:[NSLayoutConstraint] = []
@@ -68,15 +67,13 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
         var anchorAttribute = NSLayoutAttribute.Left
         pages.forEach { (page) in
             scroller.addSubview(page)
-            scroller.addConstraint(
-                NSLayoutConstraint(item: page, attribute: .Height, relatedBy: .Equal, toItem: scroller, attribute: .Height, multiplier: 1, constant: 0))
-            scroller.addConstraint(
-                NSLayoutConstraint(item: page, attribute: .CenterY, relatedBy: .Equal, toItem: scroller, attribute: .CenterY, multiplier: 1, constant: 0))
-            
-            scroller.addConstraint(
-                NSLayoutConstraint(item: page, attribute: .Width, relatedBy: .Equal, toItem: scroller, attribute: .Width, multiplier: 1, constant: 0))
+            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, equalToView: scroller, attribute: .Height))
+            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, equalToView: scroller, attribute: .CenterY))            
+            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, equalToView: scroller, attribute: .Width))            
+
             scroller.addConstraint(
                 NSLayoutConstraint(item: page, attribute: .Left, relatedBy: .Equal, toItem: anchorView, attribute: anchorAttribute, multiplier: 1, constant: 0))
+            
             anchorView = page
             anchorAttribute = .Right
         }
@@ -88,7 +85,6 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
     override public func viewDidLoad() {
         super.viewDidLoad()
 
-        setupBackground()
         setupOverlay()
         setupSkipButton()
         setupScroller()
@@ -194,29 +190,13 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
         pager.currentPage = 0
         overlayView.addSubview(pager)
 
-        let views = ["ov":overlayView, "pager":pager]
-        view.addConstraints(
-            NSLayoutConstraint
-                .constraintsWithVisualFormat("H:|[ov]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        view.addConstraints(
-            NSLayoutConstraint
-                .constraintsWithVisualFormat("V:|[ov]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
+        view.addConstraints(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
 
+        let views = ["pager":pager]
         overlayView.addConstraints(             
             NSLayoutConstraint
                 .constraintsWithVisualFormat("H:|[pager]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        overlayView.addConstraints(             
-            NSLayoutConstraint
-                .constraintsWithVisualFormat("V:[pager]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-
-    }
-    
-    private func setupBackground() {
-        view.insertSubview(backgroundView, atIndex: 0)
-    }
-    
-    private func setupPageConstraints() {
-        
+        overlayView.addConstraint(NSLayoutConstraint.constraintFor(view: pager, equalToView: overlayView, attribute: .Bottom))
     }
     
     private func setupScroller() {
@@ -230,7 +210,9 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
     }
     
     public func scrollViewDidScroll(scrollView: UIScrollView) {
-        // update page indicator
+        let pageWidth = view.frame.width
+        let halfWidth = pageWidth / 2
+        pager.currentPage = Int( ( scroller.contentOffset.x - halfWidth ) % pageWidth )
     }
 }
 
