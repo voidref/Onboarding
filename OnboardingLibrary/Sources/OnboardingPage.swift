@@ -8,6 +8,8 @@
 
 import UIKit
 
+private let kMinimumElementSpacing:CGFloat = 10
+
 public
 class OnboardingPage : UIView {
 
@@ -29,14 +31,15 @@ class OnboardingContentPage : OnboardingPage {
         case titleSubordinate   // Smaller title below the foreground image
     }
     
-    public var backgroundImage: UIImage?
-    public var foregroundImage: UIImage?
-    public var titleText: String?
-    public var contentText: String?
-    public var pageStyle: PageStyle
+    public var backgroundImage: UIImage? { didSet { backgroundImageView.image = backgroundImage } }
+    public var foregroundImage: UIImage? { didSet { foregroundImageView.image = foregroundImage } }
+    public var titleText: String?        { didSet { titleLabel.text = titleText } }
+    public var contentText: String?      { didSet { contentLabel.text = contentText } }
+    public var pageStyle: PageStyle      { didSet { setupConstraints() } }
     
     public var titleLabel = UILabel()
     public var foregroundImageView = UIImageView()
+    public var backgroundImageView = UIImageView()
     public var contentLabel = UILabel()
     
     public 
@@ -51,9 +54,16 @@ class OnboardingContentPage : OnboardingPage {
         titleLabel.text = titleText
         titleLabel.font = UIFont.boldSystemFontOfSize(36)
         titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.textAlignment = .Center
         
         foregroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        foregroundImageView.image = foregroundImage
+        foregroundImageView.contentMode = .ScaleAspectFit
+        
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentLabel.textAlignment = .Center
+        contentLabel.text = contentText
+        contentLabel.numberOfLines = 0
 
         super.init()
 
@@ -85,24 +95,89 @@ class OnboardingContentPage : OnboardingPage {
     }
     
     private func setupBackgroundImage(image:UIImage) {
-        let bgView = UIImageView(image: image)
-        bgView.translatesAutoresizingMaskIntoConstraints = false
-        bgView.contentMode = .ScaleAspectFill
+        backgroundImageView.image = image
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundImageView.contentMode = .ScaleAspectFill
         
-        insertSubview(bgView, atIndex: 0)
-        addConstraints(NSLayoutConstraint.constraintsFor(view: bgView, fillingParentView: self))
+        insertSubview(backgroundImageView, atIndex: 0)
+        addConstraints(NSLayoutConstraint.constraintsFor(view: backgroundImageView, fillingParentView: self))
     }
     
     private func setupTitleTopStyle() {
-        addConstraint(
-            NSLayoutConstraint(item: titleLabel, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 0.5, constant: 0))
-        addConstraint(
-            NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
+        let widthOffsetConstant = -(2 * kMinimumElementSpacing)
         
-        addConstraint(
-            NSLayoutConstraint(item: foregroundImageView, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0))
-        addConstraint(
-            NSLayoutConstraint(item: foregroundImageView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(
+            item: titleLabel, 
+            attribute: .CenterY, 
+            relatedBy: .Equal, 
+            toItem: self, 
+            attribute: .CenterY, 
+            multiplier: 0.5, 
+            constant: 0))
+        addConstraint(NSLayoutConstraint.constraintFor(view: titleLabel, equalToView: self, attribute: .CenterX))
+        let titleWidthConstraint = NSLayoutConstraint.constraintFor(view: titleLabel, equalToView: self, attribute: .Width)
+        titleWidthConstraint.constant = widthOffsetConstant
+        addConstraint(titleWidthConstraint)
+        
+        let imageCenterYConstraint = NSLayoutConstraint(item: foregroundImageView, 
+                                                        attribute: .CenterY, 
+                                                        relatedBy: .Equal, 
+                                                        toItem: self, 
+                                                        attribute: .CenterY, 
+                                                        multiplier: 1, 
+                                                        constant: 0)
+        imageCenterYConstraint.priority = UILayoutPriorityDefaultLow
+        addConstraint(imageCenterYConstraint)
+        addConstraint(NSLayoutConstraint(
+                item: foregroundImageView, 
+                attribute: .Top, 
+                relatedBy: .GreaterThanOrEqual, 
+                toItem: titleLabel, 
+                attribute: .Bottom, 
+                multiplier: 1, 
+                constant: kMinimumElementSpacing))
+        addConstraint(NSLayoutConstraint.constraintFor(view: foregroundImageView, equalToView: self, attribute: .CenterX))
+        addConstraint(NSLayoutConstraint(
+            item: foregroundImageView, 
+            attribute: .Width, 
+            relatedBy: .LessThanOrEqual, 
+            toItem: self, 
+            attribute: .Width, 
+            multiplier: 1, 
+            constant: widthOffsetConstant))
+        
+        if let image = foregroundImageView.image {
+            let aspect = image.size.height / image.size.width
+            addConstraint(NSLayoutConstraint(
+                item: foregroundImageView, 
+                attribute: .Height, 
+                relatedBy: .Equal, 
+                toItem: foregroundImageView, 
+                attribute: .Width, 
+                multiplier: aspect, 
+                constant: 0))
+        }
+        
+        let contentMidYConstraint = NSLayoutConstraint(item: contentLabel, 
+                                                       attribute: .CenterY, 
+                                                       relatedBy: .Equal, 
+                                                       toItem: self, 
+                                                       attribute: .CenterY, 
+                                                       multiplier: 1.5, 
+                                                       constant: 0)
+        contentMidYConstraint.priority = UILayoutPriorityDefaultLow
+        addConstraint(contentMidYConstraint)
+        
+        let contentWidthConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, equalToView: self, attribute: .Width)
+        contentWidthConstraint.constant = widthOffsetConstant
+        addConstraint(contentWidthConstraint)
+                
+        let contentBottomConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, equalToView: self, attribute: .Bottom)
+        contentBottomConstraint.constant = -UIScreen.mainScreen().bounds.height * 0.1
+        contentBottomConstraint.priority = UILayoutPriorityDefaultLow - 1
+        addConstraint(contentBottomConstraint)
+
+        addConstraint(NSLayoutConstraint.constraintFor(view: contentLabel, equalToView: self, attribute: .CenterX))
     }
 
     private func setupTitleSubordinateStyle() {

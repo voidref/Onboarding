@@ -25,7 +25,9 @@ class ViewController: UIViewController {
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[ob]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
         
         let firstPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: nil, titleText: "First!", contentText: "Some content that's all cool and stuff")
-        let secondPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: nil, titleText: "Second", contentText: "Some content that's all cool and stuff")
+        
+        let fgi = UIImage(named: "archer.corgi")
+        let secondPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: fgi, titleText: "Second", contentText: "Some content that's all cool and stuff, yet is rather long winded so that it can wrap.")
         
         ob.setPages([firstPage, secondPage])
     }
