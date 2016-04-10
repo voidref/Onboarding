@@ -24,12 +24,14 @@ class ViewController: UIViewController {
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[ob]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
         view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[ob]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
         
-        let firstPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: nil, titleText: "First!", contentText: "Some content that's all cool and stuff")
+        let firstPage = OnboardingContentPage(titleText: "First!", contentText: "Some content that's all cool and stuff")
         
         let fgi = UIImage(named: "archer.corgi")
-        let secondPage = OnboardingContentPage(backgroundImage: nil, foregroundImage: fgi, titleText: "Second", contentText: "Some content that's all cool and stuff, yet is rather long winded so that it can wrap.")
+        let secondPage = OnboardingContentPage(titleText: "Inexplicably longer winded title that should wrap!", contentText: "Some content that's all cool and stuff, yet is rather long winded so that it can wrap.", foregroundImage: fgi, pageStyle: .titleSubordinate)
         
-        ob.setPages([firstPage, secondPage])
+        let finalPage = OnboardingFinalPage(titleText: "Done!")
+        
+        ob.setPages([firstPage, secondPage, finalPage])
     }
 
     override func prefersStatusBarHidden() -> Bool {
