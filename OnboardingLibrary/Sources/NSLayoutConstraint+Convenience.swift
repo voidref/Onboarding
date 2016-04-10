@@ -10,14 +10,40 @@ import Foundation
 import UIKit
 
 extension NSLayoutConstraint {
-    public class func constraintFor(view view:UIView, equalToView:UIView, attribute:NSLayoutAttribute) -> NSLayoutConstraint {
-        return NSLayoutConstraint(item: view, attribute: attribute, relatedBy: .Equal, toItem: equalToView, attribute: attribute, multiplier: 1, constant: 0)
+    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, equalToView:UIView, multiplier:CGFloat = 1) -> NSLayoutConstraint {
+        return NSLayoutConstraint(item: view, 
+                                  attribute: attribute, 
+                                  relatedBy: .Equal, 
+                                  toItem: equalToView, 
+                                  attribute: attribute, 
+                                  multiplier: multiplier, 
+                                  constant: 0)
     }
-    
+
+    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, lessThanOrEqualToView:UIView, multiplier:CGFloat = 1) -> NSLayoutConstraint {
+        return NSLayoutConstraint(item: view, 
+                                  attribute: attribute, 
+                                  relatedBy: .LessThanOrEqual, 
+                                  toItem: lessThanOrEqualToView, 
+                                  attribute: attribute, 
+                                  multiplier: multiplier, 
+                                  constant: 0)
+    }
+
+    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, greaterThanOrEqualToView:UIView, multiplier:CGFloat = 1) -> NSLayoutConstraint {
+        return NSLayoutConstraint(item: view, 
+                                  attribute: attribute, 
+                                  relatedBy: .GreaterThanOrEqual, 
+                                  toItem: greaterThanOrEqualToView, 
+                                  attribute: attribute, 
+                                  multiplier: multiplier, 
+                                  constant: 0)
+    }
+
     public class func constraintsFor(view view:UIView, fillingParentView:UIView) -> [NSLayoutConstraint] {
-        return [NSLayoutConstraint.constraintFor(view: view, equalToView: fillingParentView, attribute: .Width),
-                NSLayoutConstraint.constraintFor(view: view, equalToView: fillingParentView, attribute: .Height),
-                NSLayoutConstraint.constraintFor(view: view, equalToView: fillingParentView, attribute: .CenterX),
-                NSLayoutConstraint.constraintFor(view: view, equalToView: fillingParentView, attribute: .CenterY)]
+        return [NSLayoutConstraint.constraintFor(view: view, attribute: .Width, equalToView: fillingParentView),
+                NSLayoutConstraint.constraintFor(view: view, attribute: .Height, equalToView: fillingParentView),
+                NSLayoutConstraint.constraintFor(view: view, attribute: .CenterX, equalToView: fillingParentView),
+                NSLayoutConstraint.constraintFor(view: view, attribute: .CenterY, equalToView: fillingParentView)]
     }
 }

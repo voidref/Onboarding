@@ -18,13 +18,13 @@ enum SkipButtonPosition {
 }
 
 public typealias SkipAction = (button:UIButton) -> Void
-public typealias DoneAction = () -> Void
+public typealias DoneAction = (onboardingController:OnboardingViewController) -> Void
 
 private let skStandardHInset:CGFloat = 20
 private let skStandardVInset:CGFloat = 10
 
 public
-class OnboardingViewController: UIViewController, UIScrollViewDelegate {
+class OnboardingViewController: UIViewController, UIScrollViewDelegate, OnboardingDoneDelegate {
 
     public 
     var skipButton = UIButton(type: .System) {
@@ -67,15 +67,19 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
         var anchorAttribute = NSLayoutAttribute.Left
         pages.forEach { (page) in
             scroller.addSubview(page)
-            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, equalToView: scroller, attribute: .Height))
-            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, equalToView: scroller, attribute: .CenterY))            
-            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, equalToView: scroller, attribute: .Width))            
+            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, attribute: .Height, equalToView: scroller))
+            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, attribute: .CenterY, equalToView: scroller))            
+            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, attribute: .Width, equalToView: scroller))            
 
             scroller.addConstraint(
                 NSLayoutConstraint(item: page, attribute: .Left, relatedBy: .Equal, toItem: anchorView, attribute: anchorAttribute, multiplier: 1, constant: 0))
             
             anchorView = page
             anchorAttribute = .Right
+        }
+        
+        if let finalPage = pages.last as? OnboardingFinalPage {
+            finalPage.doneDelegate = self
         }
         
         // ScrollViews and autolayout is ... weird and special.
@@ -196,7 +200,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
         overlayView.addConstraints(             
             NSLayoutConstraint
                 .constraintsWithVisualFormat("H:|[pager]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        overlayView.addConstraint(NSLayoutConstraint.constraintFor(view: pager, equalToView: overlayView, attribute: .Bottom))
+        overlayView.addConstraint(NSLayoutConstraint.constraintFor(view: pager, attribute: .Bottom, equalToView: overlayView))
     }
     
     private func setupScroller() {
@@ -213,6 +217,12 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate {
         let pageWidth = view.frame.width
         let halfWidth = pageWidth / 2
         pager.currentPage = Int( ( scroller.contentOffset.x - halfWidth ) % pageWidth )
+    }
+    
+    // MARK: - OnboardingDoneDelegate
+    
+    public func donePressed(page: OnboardingPage) {
+        doneAction?(onboardingController: self)
     }
 }
 

@@ -8,7 +8,13 @@
 
 import UIKit
 
+public 
+protocol OnboardingDoneDelegate {
+    func donePressed(page:OnboardingPage)
+}
+
 private let kMinimumElementSpacing:CGFloat = 10
+private let kWidthOffsetConstant = -(2 * kMinimumElementSpacing)
 
 public
 class OnboardingPage : UIView {
@@ -43,7 +49,7 @@ class OnboardingContentPage : OnboardingPage {
     public var contentLabel = UILabel()
     
     public 
-    init(backgroundImage:UIImage? = nil, foregroundImage:UIImage? = nil, titleText:String? = nil, contentText:String? = nil, pageStyle:PageStyle = .titleTop) {
+    init(titleText:String?, contentText:String? = nil, backgroundImage:UIImage? = nil, foregroundImage:UIImage? = nil, pageStyle:PageStyle = .titleTop) {
         self.backgroundImage = backgroundImage
         self.foregroundImage = foregroundImage
         self.titleText = titleText
@@ -67,10 +73,7 @@ class OnboardingContentPage : OnboardingPage {
 
         super.init()
 
-        addSubview(titleLabel)
-        addSubview(foregroundImageView)
-        addSubview(contentLabel)
-        
+        addSubviews()
         setupConstraints()
     }
     
@@ -78,6 +81,12 @@ class OnboardingContentPage : OnboardingPage {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public func addSubviews() {
+        addSubview(titleLabel)
+        addSubview(foregroundImageView)
+        addSubview(contentLabel)
+    }
+
     public func setupConstraints() {
         removeConstraints(constraints)
         
@@ -104,8 +113,8 @@ class OnboardingContentPage : OnboardingPage {
     }
     
     private func setupTitleTopStyle() {
-        let widthOffsetConstant = -(2 * kMinimumElementSpacing)
         
+        // TODO: Center title between top and foreground image
         addConstraint(NSLayoutConstraint(
             item: titleLabel, 
             attribute: .CenterY, 
@@ -114,18 +123,8 @@ class OnboardingContentPage : OnboardingPage {
             attribute: .CenterY, 
             multiplier: 0.5, 
             constant: 0))
-        addConstraint(NSLayoutConstraint.constraintFor(view: titleLabel, equalToView: self, attribute: .CenterX))
-        let titleWidthConstraint = NSLayoutConstraint.constraintFor(view: titleLabel, equalToView: self, attribute: .Width)
-        titleWidthConstraint.constant = widthOffsetConstant
-        addConstraint(titleWidthConstraint)
         
-        let imageCenterYConstraint = NSLayoutConstraint(item: foregroundImageView, 
-                                                        attribute: .CenterY, 
-                                                        relatedBy: .Equal, 
-                                                        toItem: self, 
-                                                        attribute: .CenterY, 
-                                                        multiplier: 1, 
-                                                        constant: 0)
+        let imageCenterYConstraint = NSLayoutConstraint.constraintFor(view: foregroundImageView, attribute: .CenterY, equalToView: self)
         imageCenterYConstraint.priority = UILayoutPriorityDefaultLow
         addConstraint(imageCenterYConstraint)
         addConstraint(NSLayoutConstraint(
@@ -136,16 +135,48 @@ class OnboardingContentPage : OnboardingPage {
                 attribute: .Bottom, 
                 multiplier: 1, 
                 constant: kMinimumElementSpacing))
-        addConstraint(NSLayoutConstraint.constraintFor(view: foregroundImageView, equalToView: self, attribute: .CenterX))
+        
+        setupCommonTitleConstraints()
+        setupCommonForegroundImageConstraints()
+        setupContentConstraints()
+    }
+
+    private func setupTitleSubordinateStyle() {
+        
         addConstraint(NSLayoutConstraint(
             item: foregroundImageView, 
-            attribute: .Width, 
-            relatedBy: .LessThanOrEqual, 
+            attribute: .CenterY, 
+            relatedBy: .Equal, 
             toItem: self, 
-            attribute: .Width, 
-            multiplier: 1, 
-            constant: widthOffsetConstant))
+            attribute: .CenterY, 
+            multiplier: 0.66, 
+            constant: 0))
+
+        titleLabel.font = UIFont.systemFontOfSize(24)
+        titleLabel.numberOfLines = 0
+        let titleYConstraint = NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .CenterY, equalToView: self, multiplier: 1.25)
+        addConstraint(titleYConstraint)
         
+        
+        setupCommonTitleConstraints()
+        setupCommonForegroundImageConstraints()
+        setupContentConstraints()
+    }
+    
+    private func setupCommonTitleConstraints() {
+        addConstraint(NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .CenterX, equalToView: self))
+        let titleWidthConstraint = NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .Width, equalToView: self)
+        titleWidthConstraint.constant = kWidthOffsetConstant
+        addConstraint(titleWidthConstraint)
+    }
+    
+    private func setupCommonForegroundImageConstraints() {
+        addConstraint(NSLayoutConstraint.constraintFor(view: foregroundImageView, attribute: .CenterX, equalToView: self))
+        
+        let imageWidthConstraint = NSLayoutConstraint.constraintFor(view: foregroundImageView, attribute: .Width, lessThanOrEqualToView: self)
+        imageWidthConstraint.constant = kWidthOffsetConstant
+        addConstraint(imageWidthConstraint)
+
         if let image = foregroundImageView.image {
             let aspect = image.size.height / image.size.width
             addConstraint(NSLayoutConstraint(
@@ -157,7 +188,9 @@ class OnboardingContentPage : OnboardingPage {
                 multiplier: aspect, 
                 constant: 0))
         }
-        
+    }
+    
+    private func setupContentConstraints() {
         let contentMidYConstraint = NSLayoutConstraint(item: contentLabel, 
                                                        attribute: .CenterY, 
                                                        relatedBy: .Equal, 
@@ -168,20 +201,16 @@ class OnboardingContentPage : OnboardingPage {
         contentMidYConstraint.priority = UILayoutPriorityDefaultLow
         addConstraint(contentMidYConstraint)
         
-        let contentWidthConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, equalToView: self, attribute: .Width)
-        contentWidthConstraint.constant = widthOffsetConstant
+        let contentWidthConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .Width, equalToView: self)
+        contentWidthConstraint.constant = kWidthOffsetConstant
         addConstraint(contentWidthConstraint)
-                
-        let contentBottomConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, equalToView: self, attribute: .Bottom)
+        
+        let contentBottomConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .Bottom, equalToView: self)
         contentBottomConstraint.constant = -UIScreen.mainScreen().bounds.height * 0.1
         contentBottomConstraint.priority = UILayoutPriorityDefaultLow - 1
         addConstraint(contentBottomConstraint)
-
-        addConstraint(NSLayoutConstraint.constraintFor(view: contentLabel, equalToView: self, attribute: .CenterX))
-    }
-
-    private func setupTitleSubordinateStyle() {
         
+        addConstraint(NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .CenterX, equalToView: self))
     }
 }
 
@@ -189,8 +218,41 @@ public
 class OnboardingFinalPage : OnboardingContentPage {
     
     public var doneButton = UIButton(type: .System)
+    public var doneDelegate:OnboardingDoneDelegate? = nil
     
-    override public func setupConstraints() {
+    override public func addSubviews() {
+        super.addSubviews()
+        doneButton.setTitle("Make It So!", forState: .Normal)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.addTarget(self, action: #selector(donePressed(_:)), forControlEvents: .TouchUpInside)
         
+        addSubview(doneButton)
+    }
+        
+    override public func setupConstraints() {
+        super.setupConstraints()
+        
+        addConstraint(NSLayoutConstraint.constraintFor(view: doneButton, attribute: .CenterX, equalToView: self))
+        
+        let buttonYConstraint = NSLayoutConstraint.constraintFor(view: doneButton, attribute: .CenterY, equalToView: self, multiplier: 1.7)
+        buttonYConstraint.priority = UILayoutPriorityDefaultLow
+        addConstraint(buttonYConstraint)
+        
+        addConstraint(
+            NSLayoutConstraint(item: doneButton, attribute: .Top, relatedBy: .GreaterThanOrEqual, toItem: contentLabel, attribute: .Bottom, multiplier: 1, constant: kMinimumElementSpacing))
+    }
+    
+    @objc private func donePressed(button:UIButton) {
+        doneDelegate?.donePressed(self)
     }
 }
+
+
+
+
+
+
+
+
+
+
