@@ -56,12 +56,34 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
     
     private var scroller = UIScrollView()
     
+    private var currentPageIndex:Int? {
+        willSet {
+            if let index = currentPageIndex {
+                // Oh, nomenclature, why do you torment me?
+                pages[index].resignedCurrentPage()
+            }
+        }
+        didSet {
+            if let index = currentPageIndex {
+                pages[index].becameCurrentPage()
+                pager.currentPage = index
+            }
+        }
+    }
+    
     public func setPages(pageset:[OnboardingPage]) {
         
         pages.forEach { $0.removeFromSuperview() }
         
         pages = pageset
+        
+        if pages.count < 1 {
+            // TODO: Assert we always have at least 1 page?
+            return
+        }
+        
         pager.numberOfPages = pages.count
+        currentPageIndex = 0
         
         var anchorView:UIView = scroller
         var anchorAttribute = NSLayoutAttribute.Left
@@ -187,11 +209,9 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         
         overlayView.translatesAutoresizingMaskIntoConstraints = false
 
-        pager.numberOfPages = 3
         pager.translatesAutoresizingMaskIntoConstraints = false
         pager.currentPageIndicatorTintColor = UIColor.blackColor()
         pager.pageIndicatorTintColor = UIColor.lightGrayColor()
-        pager.currentPage = 0
         overlayView.addSubview(pager)
 
         view.addConstraints(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
@@ -216,7 +236,11 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
     public func scrollViewDidScroll(scrollView: UIScrollView) {
         let pageWidth = view.frame.width
         let halfWidth = pageWidth / 2
-        pager.currentPage = Int( ( scroller.contentOffset.x - halfWidth ) % pageWidth )
+        var pageNum = Int( ( scroller.contentOffset.x + halfWidth ) / pageWidth )
+        
+        if currentPageIndex != pageNum {
+            currentPageIndex = pageNum
+        }
     }
     
     // MARK: - OnboardingDoneDelegate

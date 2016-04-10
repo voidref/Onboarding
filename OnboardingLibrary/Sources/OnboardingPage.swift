@@ -27,7 +27,18 @@ class OnboardingPage : UIView {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    public func becameCurrentPage() {
+        
+    }
+    
+    public func resignedCurrentPage() {
+        
+    }
 }
+
+
+// MARK: - Content Page
 
 public
 class OnboardingContentPage : OnboardingPage {
@@ -213,6 +224,9 @@ class OnboardingContentPage : OnboardingPage {
         addConstraint(NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .CenterX, equalToView: self))
     }
 }
+
+
+// MARK: - Final Page
 
 public
 class OnboardingFinalPage : OnboardingContentPage {
