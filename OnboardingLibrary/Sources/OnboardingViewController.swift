@@ -156,8 +156,6 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
 
         var firstAttribute = NSLayoutAttribute.Left
         var secondAttribute = NSLayoutAttribute.Bottom
-        var viewFirstAttribute = NSLayoutAttribute.Left
-        var viewSecondAttribute = NSLayoutAttribute.Bottom
         var firstInset = skStandardHInset
         var secondInset = -skStandardVInset
         
@@ -236,7 +234,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
     public func scrollViewDidScroll(scrollView: UIScrollView) {
         let pageWidth = view.frame.width
         let halfWidth = pageWidth / 2
-        var pageNum = Int( ( scroller.contentOffset.x + halfWidth ) / pageWidth )
+        let pageNum = Int( ( scroller.contentOffset.x + halfWidth ) / pageWidth )
         
         if currentPageIndex != pageNum {
             currentPageIndex = pageNum
