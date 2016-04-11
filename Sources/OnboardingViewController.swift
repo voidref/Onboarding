@@ -110,6 +110,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.whiteColor()
 
         setupOverlay()
         setupSkipButton()
