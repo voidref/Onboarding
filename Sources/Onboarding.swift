@@ -11,6 +11,6 @@
 public let OnboardingVersionNumber = 1
 
 //! Project version string for Onboarding.
-public let  OnboardingVersionString = "1.0"
+public let OnboardingVersionString = "1.0"
 
 
