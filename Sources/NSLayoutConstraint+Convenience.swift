@@ -10,7 +10,8 @@ import Foundation
 import UIKit
 
 extension NSLayoutConstraint {
-    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, equalToView:UIView, multiplier:CGFloat = 1) -> NSLayoutConstraint {
+    // Apple hasn't bothered to make multiplicitave constraints for anchors that aren't dimensions...
+    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, equalToView:UIView, multiplier:CGFloat) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: view, 
                                   attribute: attribute, 
                                   relatedBy: .Equal, 
@@ -20,7 +21,7 @@ extension NSLayoutConstraint {
                                   constant: 0)
     }
 
-    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, lessThanOrEqualToView:UIView, multiplier:CGFloat = 1) -> NSLayoutConstraint {
+    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, lessThanOrEqualToView:UIView, multiplier:CGFloat) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: view, 
                                   attribute: attribute, 
                                   relatedBy: .LessThanOrEqual, 
@@ -30,7 +31,7 @@ extension NSLayoutConstraint {
                                   constant: 0)
     }
 
-    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, greaterThanOrEqualToView:UIView, multiplier:CGFloat = 1) -> NSLayoutConstraint {
+    public class func constraintFor(view view:UIView, attribute:NSLayoutAttribute, greaterThanOrEqualToView:UIView, multiplier:CGFloat) -> NSLayoutConstraint {
         return NSLayoutConstraint(item: view, 
                                   attribute: attribute, 
                                   relatedBy: .GreaterThanOrEqual, 
@@ -41,9 +42,9 @@ extension NSLayoutConstraint {
     }
 
     public class func constraintsFor(view view:UIView, fillingParentView:UIView) -> [NSLayoutConstraint] {
-        return [NSLayoutConstraint.constraintFor(view: view, attribute: .Width, equalToView: fillingParentView),
-                NSLayoutConstraint.constraintFor(view: view, attribute: .Height, equalToView: fillingParentView),
-                NSLayoutConstraint.constraintFor(view: view, attribute: .CenterX, equalToView: fillingParentView),
-                NSLayoutConstraint.constraintFor(view: view, attribute: .CenterY, equalToView: fillingParentView)]
+        return [view.leadingAnchor.constraintEqualToAnchor(fillingParentView.leadingAnchor),
+                view.trailingAnchor.constraintEqualToAnchor(fillingParentView.trailingAnchor),
+                view.topAnchor.constraintEqualToAnchor(fillingParentView.topAnchor),
+                view.bottomAnchor.constraintEqualToAnchor(fillingParentView.bottomAnchor)]
     }
 }

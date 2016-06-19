@@ -120,33 +120,28 @@ class OnboardingContentPage : OnboardingPage {
         backgroundImageView.contentMode = .ScaleAspectFill
         
         insertSubview(backgroundImageView, atIndex: 0)
-        addConstraints(NSLayoutConstraint.constraintsFor(view: backgroundImageView, fillingParentView: self))
+        NSLayoutConstraint.activateConstraints((NSLayoutConstraint.constraintsFor(view: backgroundImageView, fillingParentView: self)))
     }
     
     private func setupTitleTopStyle() {
         
         // TODO: Center title between top and foreground image
-        addConstraint(NSLayoutConstraint(
-            item: titleLabel, 
-            attribute: .CenterY, 
-            relatedBy: .Equal, 
-            toItem: self, 
-            attribute: .CenterY, 
-            multiplier: 0.5, 
-            constant: 0))
-        
-        let imageCenterYConstraint = NSLayoutConstraint.constraintFor(view: foregroundImageView, attribute: .CenterY, equalToView: self)
+        let imageCenterYConstraint = foregroundImageView.centerYAnchor.constraintEqualToAnchor(centerYAnchor) 
         imageCenterYConstraint.priority = UILayoutPriorityDefaultLow
-        addConstraint(imageCenterYConstraint)
-        addConstraint(NSLayoutConstraint(
-                item: foregroundImageView, 
-                attribute: .Top, 
-                relatedBy: .GreaterThanOrEqual, 
-                toItem: titleLabel, 
-                attribute: .Bottom, 
-                multiplier: 1, 
-                constant: kMinimumElementSpacing))
         
+        NSLayoutConstraint.activateConstraints([
+            NSLayoutConstraint(
+                item: titleLabel, 
+                attribute: .CenterY, 
+                relatedBy: .Equal, 
+                toItem: self, 
+                attribute: .CenterY, 
+                multiplier: 0.5, 
+                constant: 0),             // WTF, Apple, no multiplier on Anchors that aren't dimensions?
+            imageCenterYConstraint,
+            foregroundImageView.topAnchor.constraintGreaterThanOrEqualToAnchor(titleLabel.bottomAnchor, constant: kMinimumElementSpacing)
+            ])
+
         setupCommonTitleConstraints()
         setupCommonForegroundImageConstraints()
         setupContentConstraints()
@@ -154,19 +149,18 @@ class OnboardingContentPage : OnboardingPage {
 
     private func setupTitleSubordinateStyle() {
         
-        addConstraint(NSLayoutConstraint(
+        NSLayoutConstraint(
             item: foregroundImageView, 
             attribute: .CenterY, 
             relatedBy: .Equal, 
             toItem: self, 
             attribute: .CenterY, 
             multiplier: 0.66, 
-            constant: 0))
+            constant: 0).active = true
 
         titleLabel.font = UIFont.systemFontOfSize(24)
         titleLabel.numberOfLines = 0
-        let titleYConstraint = NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .CenterY, equalToView: self, multiplier: 1.25)
-        addConstraint(titleYConstraint)
+        NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .CenterY, equalToView: self, multiplier: 1.25).active = true
         
         
         setupCommonTitleConstraints()
@@ -175,30 +169,22 @@ class OnboardingContentPage : OnboardingPage {
     }
     
     private func setupCommonTitleConstraints() {
-        addConstraint(NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .CenterX, equalToView: self))
-        let titleWidthConstraint = NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .Width, equalToView: self)
-        titleWidthConstraint.constant = kWidthOffsetConstant
-        addConstraint(titleWidthConstraint)
+        NSLayoutConstraint.activateConstraints([
+            titleLabel.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
+            titleLabel.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: kWidthOffsetConstant)
+        ])
     }
     
     private func setupCommonForegroundImageConstraints() {
-        addConstraint(NSLayoutConstraint.constraintFor(view: foregroundImageView, attribute: .CenterX, equalToView: self))
-        
-        let imageWidthConstraint = NSLayoutConstraint.constraintFor(view: foregroundImageView, attribute: .Width, lessThanOrEqualToView: self)
-        imageWidthConstraint.constant = kWidthOffsetConstant
-        addConstraint(imageWidthConstraint)
-
         if let image = foregroundImageView.image {
             let aspect = image.size.height / image.size.width
-            addConstraint(NSLayoutConstraint(
-                item: foregroundImageView, 
-                attribute: .Height, 
-                relatedBy: .Equal, 
-                toItem: foregroundImageView, 
-                attribute: .Width, 
-                multiplier: aspect, 
-                constant: 0))
+            foregroundImageView.heightAnchor.constraintEqualToAnchor(foregroundImageView.widthAnchor, multiplier: aspect).active = true
         }
+        
+        NSLayoutConstraint.activateConstraints([
+            foregroundImageView.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
+            foregroundImageView.widthAnchor.constraintLessThanOrEqualToAnchor(widthAnchor, constant: kWidthOffsetConstant),
+            ])
     }
     
     private func setupContentConstraints() {
@@ -210,18 +196,17 @@ class OnboardingContentPage : OnboardingPage {
                                                        multiplier: 1.5, 
                                                        constant: 0)
         contentMidYConstraint.priority = UILayoutPriorityDefaultLow
-        addConstraint(contentMidYConstraint)
-        
-        let contentWidthConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .Width, equalToView: self)
-        contentWidthConstraint.constant = kWidthOffsetConstant
-        addConstraint(contentWidthConstraint)
-        
-        let contentBottomConstraint = NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .Bottom, equalToView: self)
+                
+        let contentBottomConstraint = contentLabel.bottomAnchor.constraintEqualToAnchor(bottomAnchor)
         contentBottomConstraint.constant = -UIScreen.mainScreen().bounds.height * 0.1
         contentBottomConstraint.priority = UILayoutPriorityDefaultLow - 1
-        addConstraint(contentBottomConstraint)
         
-        addConstraint(NSLayoutConstraint.constraintFor(view: contentLabel, attribute: .CenterX, equalToView: self))
+        NSLayoutConstraint.activateConstraints([
+            contentMidYConstraint,
+            contentBottomConstraint,
+            contentLabel.widthAnchor.constraintEqualToAnchor(widthAnchor, constant: kWidthOffsetConstant),
+            contentLabel.centerXAnchor.constraintEqualToAnchor(centerXAnchor)
+        ])
     }
 }
 
@@ -246,14 +231,14 @@ class OnboardingFinalPage : OnboardingContentPage {
     override public func setupConstraints() {
         super.setupConstraints()
         
-        addConstraint(NSLayoutConstraint.constraintFor(view: doneButton, attribute: .CenterX, equalToView: self))
-        
         let buttonYConstraint = NSLayoutConstraint.constraintFor(view: doneButton, attribute: .CenterY, equalToView: self, multiplier: 1.7)
         buttonYConstraint.priority = UILayoutPriorityDefaultLow
-        addConstraint(buttonYConstraint)
         
-        addConstraint(
-            NSLayoutConstraint(item: doneButton, attribute: .Top, relatedBy: .GreaterThanOrEqual, toItem: contentLabel, attribute: .Bottom, multiplier: 1, constant: kMinimumElementSpacing))
+        NSLayoutConstraint.activateConstraints([
+            doneButton.centerXAnchor.constraintEqualToAnchor(centerXAnchor),
+            buttonYConstraint,
+            doneButton.topAnchor.constraintGreaterThanOrEqualToAnchor(contentLabel.bottomAnchor, constant: kMinimumElementSpacing)
+        ])
     }
     
     @objc private func donePressed(button:UIButton) {

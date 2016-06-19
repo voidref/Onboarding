@@ -89,9 +89,11 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         var anchorAttribute = NSLayoutAttribute.Left
         pages.forEach { (page) in
             scroller.addSubview(page)
-            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, attribute: .Height, equalToView: scroller))
-            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, attribute: .CenterY, equalToView: scroller))            
-            scroller.addConstraint(NSLayoutConstraint.constraintFor(view: page, attribute: .Width, equalToView: scroller))            
+            NSLayoutConstraint.activateConstraints([
+                page.heightAnchor.constraintEqualToAnchor(scroller.heightAnchor),
+                page.centerYAnchor.constraintEqualToAnchor(scroller.centerYAnchor),
+                page.widthAnchor.constraintEqualToAnchor(scroller.widthAnchor)
+            ])
 
             scroller.addConstraint(
                 NSLayoutConstraint(item: page, attribute: .Left, relatedBy: .Equal, toItem: anchorView, attribute: anchorAttribute, multiplier: 1, constant: 0))
@@ -199,7 +201,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
                            constant: secondInset)
         ]
 
-        overlayView.addConstraints(currentSkipConstraints)
+        NSLayoutConstraint.activateConstraints(currentSkipConstraints)
     }
     
     private func setupOverlay() {
@@ -213,13 +215,13 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         pager.pageIndicatorTintColor = UIColor.lightGrayColor()
         overlayView.addSubview(pager)
 
-        view.addConstraints(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
 
-        let views = ["pager":pager]
-        overlayView.addConstraints(             
-            NSLayoutConstraint
-                .constraintsWithVisualFormat("H:|[pager]|", options: NSLayoutFormatOptions(), metrics: nil, views: views))
-        overlayView.addConstraint(NSLayoutConstraint.constraintFor(view: pager, attribute: .Bottom, equalToView: overlayView))
+        NSLayoutConstraint.activateConstraints([
+            pager.leadingAnchor.constraintEqualToAnchor(overlayView.leadingAnchor),
+            pager.trailingAnchor.constraintEqualToAnchor(overlayView.trailingAnchor),
+            pager.bottomAnchor.constraintEqualToAnchor(overlayView.bottomAnchor)
+        ])
     }
     
     private func setupScroller() {
@@ -229,7 +231,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         scroller.showsHorizontalScrollIndicator = false
         view.addSubview(scroller)
         
-        view.addConstraints(NSLayoutConstraint.constraintsFor(view: scroller, fillingParentView: view))
+        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsFor(view: scroller, fillingParentView: view))
     }
     
     public func scrollViewDidScroll(scrollView: UIScrollView) {

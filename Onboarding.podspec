@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "Onboarding"
-  s.version          = "0.1.1"
+  s.version          = "0.1.2"
   s.summary          = "An easy multipage onboarding UI controller."
 
   s.description      = "Starting with a few pages of onboarding is near ubiquitous in today's iOS apps, but UIPageViewController is honestly an overly complex way to accomplish this, often with layout problems for things like a skip button. This library attempts to make it easier to do."
