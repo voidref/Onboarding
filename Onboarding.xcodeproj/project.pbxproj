@@ -105,6 +105,7 @@
 					E755CDA91CAF236900980DE8 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = SR7K2S8GE4;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -258,6 +259,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -277,6 +279,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.rockwood.Onboarding;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

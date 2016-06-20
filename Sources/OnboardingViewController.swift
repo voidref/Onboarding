@@ -27,7 +27,7 @@ public
 class OnboardingViewController: UIViewController, UIScrollViewDelegate, OnboardingDoneDelegate {
 
     public 
-    var skipButton = UIButton(type: .System) {
+    var skipButton = UIButton(type: .system) {
         willSet {
             currentSkipConstraints = []
             skipButton.removeFromSuperview()
@@ -71,7 +71,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         }
     }
     
-    public func setPages(pageset:[OnboardingPage]) {
+    public func setPages(_ pageset:[OnboardingPage]) {
         
         pages.forEach { $0.removeFromSuperview() }
         
@@ -86,20 +86,20 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         currentPageIndex = 0
         
         var anchorView:UIView = scroller
-        var anchorAttribute = NSLayoutAttribute.Left
+        var anchorAttribute = NSLayoutAttribute.left
         pages.forEach { (page) in
             scroller.addSubview(page)
-            NSLayoutConstraint.activateConstraints([
-                page.heightAnchor.constraintEqualToAnchor(scroller.heightAnchor),
-                page.centerYAnchor.constraintEqualToAnchor(scroller.centerYAnchor),
-                page.widthAnchor.constraintEqualToAnchor(scroller.widthAnchor)
+            NSLayoutConstraint.activate([
+                page.heightAnchor.constraint(equalTo: scroller.heightAnchor),
+                page.centerYAnchor.constraint(equalTo: scroller.centerYAnchor),
+                page.widthAnchor.constraint(equalTo: scroller.widthAnchor)
             ])
 
             scroller.addConstraint(
-                NSLayoutConstraint(item: page, attribute: .Left, relatedBy: .Equal, toItem: anchorView, attribute: anchorAttribute, multiplier: 1, constant: 0))
+                NSLayoutConstraint(item: page, attribute: .left, relatedBy: .equal, toItem: anchorView, attribute: anchorAttribute, multiplier: 1, constant: 0))
             
             anchorView = page
-            anchorAttribute = .Right
+            anchorAttribute = .right
         }
         
         if let finalPage = pages.last as? OnboardingFinalPage {
@@ -107,12 +107,12 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         }
         
         // ScrollViews and autolayout is ... weird and special.
-        scroller.addConstraint(NSLayoutConstraint(item: scroller, attribute: .Right, relatedBy: .Equal, toItem: anchorView, attribute: .Right, multiplier: 1, constant: 0))
+        scroller.addConstraint(NSLayoutConstraint(item: scroller, attribute: .right, relatedBy: .equal, toItem: anchorView, attribute: .right, multiplier: 1, constant: 0))
     }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white()
 
         setupOverlay()
         setupSkipButton()
@@ -128,7 +128,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         return true
     }
     
-    @objc private func skipButtonPressed(button:UIButton) {
+    @objc private func skipButtonPressed(_ button:UIButton) {
         guard let skipActionActual = skipAction else {
             
             // This is supposed to crash with this message.
@@ -140,14 +140,14 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
     }
     
     private func setupSkipButton() {
-        skipButton.setTitle(NSLocalizedString("Skip", comment:"Onboarding 'Skip' button"), forState: .Normal)
+        skipButton.setTitle(NSLocalizedString("Skip", comment:"Onboarding 'Skip' button"), for: UIControlState())
         skipButton.translatesAutoresizingMaskIntoConstraints = false
         updateSkipButton()
     }
     
     // Nomenclature is hard
     private func updateSkipButton() {
-        skipButton.addTarget(self, action: #selector(skipButtonPressed), forControlEvents: .TouchUpInside)
+        skipButton.addTarget(self, action: #selector(skipButtonPressed), for: .touchUpInside)
         overlayView.addSubview(skipButton)
         
         updateSkipConstraints()
@@ -157,24 +157,24 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         
         overlayView.removeConstraints(currentSkipConstraints)
 
-        var firstAttribute = NSLayoutAttribute.Left
-        var secondAttribute = NSLayoutAttribute.Bottom
+        var firstAttribute = NSLayoutAttribute.left
+        var secondAttribute = NSLayoutAttribute.bottom
         var firstInset = skStandardHInset
         var secondInset = -skStandardVInset
         
         switch skipPosition {
             case .topLeft:
-                secondAttribute = .Top
+                secondAttribute = .top
                 secondInset = skStandardVInset
             
             case .topRight:
-                firstAttribute = .Right
-                secondAttribute = .Top
+                firstAttribute = .right
+                secondAttribute = .top
                 firstInset = -skStandardHInset
                 secondInset = skStandardVInset
             
             case .bottomRight:
-                firstAttribute = .Right
+                firstAttribute = .right
                 firstInset = -skStandardHInset
             
             case .bottomLeft:
@@ -187,54 +187,54 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         currentSkipConstraints = [
             NSLayoutConstraint(item: skipButton, 
                           attribute: firstAttribute, 
-                          relatedBy: .Equal, 
+                          relatedBy: .equal, 
                              toItem: overlayView, 
                           attribute: firstAttribute, 
                          multiplier: 1, 
                            constant: firstInset),
             NSLayoutConstraint(item: skipButton, 
                           attribute: secondAttribute, 
-                          relatedBy: .Equal, 
+                          relatedBy: .equal, 
                              toItem: overlayView, 
                           attribute: secondAttribute, 
                          multiplier: 1, 
                            constant: secondInset)
         ]
 
-        NSLayoutConstraint.activateConstraints(currentSkipConstraints)
+        NSLayoutConstraint.activate(currentSkipConstraints)
     }
     
     private func setupOverlay() {
         view.addSubview(overlayView)        
-        view.bringSubviewToFront(overlayView)
+        view.bringSubview(toFront: overlayView)
         
         overlayView.translatesAutoresizingMaskIntoConstraints = false
 
         pager.translatesAutoresizingMaskIntoConstraints = false
-        pager.currentPageIndicatorTintColor = UIColor.blackColor()
-        pager.pageIndicatorTintColor = UIColor.lightGrayColor()
+        pager.currentPageIndicatorTintColor = UIColor.black()
+        pager.pageIndicatorTintColor = UIColor.lightGray()
         overlayView.addSubview(pager)
 
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
 
-        NSLayoutConstraint.activateConstraints([
-            pager.leadingAnchor.constraintEqualToAnchor(overlayView.leadingAnchor),
-            pager.trailingAnchor.constraintEqualToAnchor(overlayView.trailingAnchor),
-            pager.bottomAnchor.constraintEqualToAnchor(overlayView.bottomAnchor)
+        NSLayoutConstraint.activate([
+            pager.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
+            pager.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+            pager.bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
         ])
     }
     
     private func setupScroller() {
         scroller.translatesAutoresizingMaskIntoConstraints = false
-        scroller.pagingEnabled = true
+        scroller.isPagingEnabled = true
         scroller.delegate = self
         scroller.showsHorizontalScrollIndicator = false
         view.addSubview(scroller)
         
-        NSLayoutConstraint.activateConstraints(NSLayoutConstraint.constraintsFor(view: scroller, fillingParentView: view))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraintsFor(view: scroller, fillingParentView: view))
     }
     
-    public func scrollViewDidScroll(scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageWidth = view.frame.width
         let halfWidth = pageWidth / 2
         let pageNum = Int( ( scroller.contentOffset.x + halfWidth ) / pageWidth )
@@ -246,7 +246,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
     
     // MARK: - OnboardingDoneDelegate
     
-    public func donePressed(page: OnboardingPage) {
+    public func donePressed(_ page: OnboardingPage) {
         doneAction?(onboardingController: self)
     }
 }
