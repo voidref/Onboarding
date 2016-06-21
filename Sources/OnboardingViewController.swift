@@ -215,7 +215,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         pager.pageIndicatorTintColor = UIColor.lightGray()
         overlayView.addSubview(pager)
 
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraintsFor(view: overlayView, fillingParentView: view))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(for: overlayView, filling: view))
 
         NSLayoutConstraint.activate([
             pager.leadingAnchor.constraint(equalTo: overlayView.leadingAnchor),
@@ -231,7 +231,7 @@ class OnboardingViewController: UIViewController, UIScrollViewDelegate, Onboardi
         scroller.showsHorizontalScrollIndicator = false
         view.addSubview(scroller)
         
-        NSLayoutConstraint.activate(NSLayoutConstraint.constraintsFor(view: scroller, fillingParentView: view))
+        NSLayoutConstraint.activate(NSLayoutConstraint.constraints(for: scroller, filling: view))
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {

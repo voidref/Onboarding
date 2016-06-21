@@ -9,7 +9,7 @@
 import UIKit
 
 public 
-protocol OnboardingDoneDelegate {
+protocol OnboardingDoneDelegate: AnyObject {
     func donePressed(_ page:OnboardingPage)
 }
 
@@ -120,7 +120,7 @@ class OnboardingContentPage : OnboardingPage {
         backgroundImageView.contentMode = .scaleAspectFill
         
         insertSubview(backgroundImageView, at: 0)
-        NSLayoutConstraint.activate((NSLayoutConstraint.constraintsFor(view: backgroundImageView, fillingParentView: self)))
+        NSLayoutConstraint.activate((NSLayoutConstraint.constraints(for: backgroundImageView, filling: self)))
     }
     
     private func setupTitleTopStyle() {
@@ -148,20 +148,14 @@ class OnboardingContentPage : OnboardingPage {
     }
 
     private func setupTitleSubordinateStyle() {
-        
-        NSLayoutConstraint(
-            item: foregroundImageView, 
-            attribute: .centerY, 
-            relatedBy: .equal, 
-            toItem: self, 
-            attribute: .centerY, 
-            multiplier: 0.66, 
-            constant: 0).isActive = true
 
         titleLabel.font = UIFont.systemFont(ofSize: 24)
         titleLabel.numberOfLines = 0
-        NSLayoutConstraint.constraintFor(view: titleLabel, attribute: .centerY, equalToView: self, multiplier: 1.25).isActive = true
         
+        NSLayoutConstraint.activate([
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor, multiplier: 1.25),
+            foregroundImageView.centerYAnchor.constraint(equalTo: centerYAnchor, multiplier: 0.66)
+        ])
         
         setupCommonTitleConstraints()
         setupCommonForegroundImageConstraints()
@@ -231,7 +225,7 @@ class OnboardingFinalPage : OnboardingContentPage {
     override public func setupConstraints() {
         super.setupConstraints()
         
-        let buttonYConstraint = NSLayoutConstraint.constraintFor(view: doneButton, attribute: .centerY, equalToView: self, multiplier: 1.7)
+        let buttonYConstraint = doneButton.centerYAnchor.constraint(equalTo: centerYAnchor, multiplier: 1.7)
         buttonYConstraint.priority = UILayoutPriorityDefaultLow
         
         NSLayoutConstraint.activate([

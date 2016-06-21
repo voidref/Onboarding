@@ -99,7 +99,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = rockwood;
 				TargetAttributes = {
 					E755CDA91CAF236900980DE8 = {
@@ -279,6 +279,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.rockwood.Onboarding;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
